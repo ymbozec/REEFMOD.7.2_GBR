@@ -8,9 +8,9 @@ Version 7.2 has refined the implementation of interventions with mechanisms of c
    - the outplanting of corals of specified species group, size and heat tolerance at a specified density
    - the enrichment of coral larvae of specified species group with a specified density
     
-Version 7.2 also integrates the last implementation (Jun 24, from UQ Christina Skinner) of the CoTS control module used for ReefMod smulations within the COTS Control Innovation Program (https://barrierreef.org/cots-control-innovation-program)
+Version 7.2 also integrates the last implementation (June 2024, Christina Skinner @UQ) of the CoTS control module used for ReefMod smulations in the COTS Control Innovation Program (https://barrierreef.org/cots-control-innovation-program)
 
-WARNING: To be run the code requires inclusion of the folder REEFMOD.7.0_GBR/data into the Matlab working directory.
+WARNING: running the code requires inclusion into the Matlab working directory of the folder REEFMOD.7.0_GBR/data.
 
 Either CMIP-5 or CMIP-6 models can be selected from the front script MAIN_REEFMOD_GBR.m (but see REEFMOD.6.8_GBR/MAIN_REEFMOD_GBR.m for using CMIP-5 models as input). The script is designed to run the model under one climate change scenario (ie, one CMIP-5 or CMIP-6 model with the available scenario of carbon emission RCP/SSP) chosen by the user. The number of repeat simulations, ie, the stochastic simulation of the same warming scenario under different projections of cyclones and other random events (including the initialisation of coral cover and CoTS density, the magnitude of coral mortality, the forcing scheme of water quality,...) can be set with 'NB_SIMULATIONS' (set to 20 in RRAP). Because the runtime of one model run is about 2 hours, use of HPC resources is recommended.
 

@@ -1,0 +1,6 @@
+YM (18/03/2024): 
+Cleaning old code for CoTS control -> in /Old
+- f_makeReefList.m from Karlo (see version 6.8 for legacy mat files, now deleted) which was using 'CSIROprioritylist.mat' + control options listed in 'parsList2.csv'.
+- f_makeReefList_CCS.m from Carolina which was using same files + f_redistrib_COTS.m (to estimate CoTS population at site levels), betainfrnd.m, New_regions.mat, COTS_sites, COTS_sites_new -> see version.6.5 (Castro-Sanguino et al. 2023)
+
+

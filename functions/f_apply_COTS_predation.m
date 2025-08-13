@@ -9,7 +9,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [coral,algal,new_density_COTS,total_coral_loss] = f_apply_COTS_predation(coral, algal, ...
-    density_COTS, density_COTS_settlers, COTS_feeding_rates, SI, COTS_background_density, META)
+    density_COTS, density_COTS_settlers, COTS_feeding_rates, SI, COTS_background_density, COTS_mortality, META)
 
 %%% 1) PROCESS COTS DYNAMICS (GROWTH AND MORTALITY)
 temp1_density_COTS = zeros(size(COTS_feeding_rates,2),1) ;
@@ -17,7 +17,7 @@ temp1_density_COTS(2:end) = squeeze(density_COTS(1:(end-1))) ;% Increment the ag
 % (note this eradicates the oldest COTS)
 temp1_density_COTS(1) = density_COTS_settlers ; % COTS settlers before mortality 
 
-new_density_COTS = (1-META.COTS_mortality').*temp1_density_COTS' ;
+new_density_COTS = (1-COTS_mortality').*temp1_density_COTS' ;
 
 
 %%% 2) ESTIMATE TOTAL MORTALITY OF EACH CORAL SPECIES

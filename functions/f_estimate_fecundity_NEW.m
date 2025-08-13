@@ -3,7 +3,7 @@
 % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [total_fecundity, mean_HT, var_HT] = f_estimate_fecundity_NEW(coral_cm2, HT, F_list, fecund_min_size, a, b)
+function [total_fecundity, mean_HT, var_HT] = f_estimate_fecundity_NEW(coral_cm2, HT, F_list, fecund_min_size, a, b, FS)
 
 % Select colony sizes with 100% gravid
 I=find(coral_cm2>= fecund_min_size);
@@ -20,7 +20,9 @@ if isempty(I)==0
     % Also, makes more sense to apply relative fitness on number of eggs rather than colony size (log...)
     all_egg_volumes = adult_relfitness.*(10.^(a + b*log10(adult_coral_sizes))) ; % mm3 of eggs produced by each colony
     
-    total_fecundity = floor(sum(sum(all_egg_volumes))/0.1) ; %0.1 mm3 is the average volume of an egg
+    % total_fecundity = floor(sum(sum(all_egg_volumes))/0.1) ; %0.1 mm3 is the average volume of an egg
+    total_fecundity = FS*floor(sum(sum(all_egg_volumes))/0.1) ; %0.1 mm3 is the average volume of an egg
+
     HT_fecund = full(HT(I)); % need to convert sparse matrix HT
     mean_HT = sum(all_egg_volumes.*HT_fecund)/sum(all_egg_volumes);
     var_HT = var(HT_fecund,all_egg_volumes);

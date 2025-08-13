@@ -93,14 +93,15 @@ for yr = 1:7
     end
 end
 
+%% NOT AVAILABLE ANYMORE BECAUSE NOT CURRENTLY USED
 %For CoTS (only if simulating CoTS)
-if META.doing_COTS == 1
-    self2 = sparse(diag(META.COTS_min_selfseed * ones(1,META.nb_reefs,1)));
-    for yr = 1:7
-        for spawning = 1:4
-            CONNECT_GBR1(yr,spawning).COTS = self2 + GBR_CONNECT(yr,spawning).COTS(META.reef_ID,META.reef_ID) ;
-        end
-    end
-end
+% if META.doing_COTS == 1
+%     self2 = sparse(diag(META.COTS_min_selfseed * ones(1,META.nb_reefs,1)));
+%     for yr = 1:7
+%         for spawning = 1:4
+%             CONNECT_GBR1(yr,spawning).COTS = self2 + GBR_CONNECT(yr,spawning).COTS(META.reef_ID,META.reef_ID) ;
+%         end
+%     end
+% end
 
 clear GBR_CONNECT self1 self2

@@ -113,7 +113,7 @@ CORAL.SI = [ 6.16 ; 5.43 ; 5.65 ; 5.12 ; 3.7/2 ; 3.7 ] ; % Holmes et al. 2008, K
 %%%%%%% NEW (08/2015): Proportion of recruits from each coral group (sums to 1)
 CORAL.prop_settlers = [ 0.05 ; 0.25 ; 0.25 ; 0.15 ; 0.15 ; 0.15]; % ~average props on midshelf/outer reefs (Jez)
 
-% Maximum diameter of coral colonies to estimate max size (cm2)
+% Maximum diameter (cm) of coral colonies to estimate max size (area cm2)
 CORAL.max_diameter = [120 ; 100 ; 50 ; 40; 60 ; 200 ]; % Further limited by cell size
 
 % Define the initial size distribution of coral colonies

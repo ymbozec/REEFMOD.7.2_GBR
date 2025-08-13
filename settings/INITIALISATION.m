@@ -130,7 +130,8 @@ end
 
 
 if META.doing_coral_connectivity==1 ||  META.doing_COTS_connectivity==1      
-    settings_CONNECTIVITY;
+    % settings_CONNECTIVITY;
+    settings_CONNECTIVITY_NEW;  % Feb 2025: use GBR4 connectivity for CoTS but GBR1 connectivity for corals
 else
     CONNECT = [];
 end

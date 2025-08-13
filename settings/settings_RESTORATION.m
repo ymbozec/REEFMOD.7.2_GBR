@@ -15,7 +15,7 @@ META.doing_coral_outplanting = RESTORATION.doing_coral_outplanting ; % timing of
 % Restoration effort in terms of total number of outplants available at each time step
 META.total_nb_outplants = RESTORATION.total_nb_outplants;
 % Restoration effort in terms of number of reefs where coral outplanting is undertaken at each time step
-META.nb_reefs_outplanted = [] ; % ? Set to Inf if unlimited OR if specific reefs are restored (listed in SETTINGS_RESTORATION
+META.nb_reefs_outplanted = RESTORATION.total_nb_outplants ; % ? Set to Inf if unlimited OR if specific reefs are restored (listed in SETTINGS_RESTORATION
 % If 0, outplanting cannot happen. For the counterfactual, set to Inf with outplanted_density = 0 for ghost deployment
 META.outplant_density_variable = 1; % 1: deployed density on a reef is variable and deployment area (as a proportion of reef area) is fixed;
 % 0: density is fixed (META.outplanted_density), and deployment area is variable (NOT IMPLEMENTED YET)

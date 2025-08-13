@@ -13,10 +13,14 @@ Version 7.2 also integrates the last implementation (June 2024, Christina Skinne
 See MAIN_REEFMOD_GBR.m for the full list of new implementations.
 
 
-## Instructions
+## Extra requirements
 
-WARNING: running the code requires inclusion into the folder /data of the file GBR1_CONNECT.mat (new coral connectivity at 1 km resolution).
+Running the code requires:
+1. inclusion into the folder /data/Climatology of the CMIP6 projections of heat stress. These projections are in the folder /Climatology/Future/CMIP6 of the repository [REEFMOD.7.0_GBR](https://github.com/ymbozec/REEFMOD.7.0_GBR)
+2. inclusion into the folder /data of the file GBR1_CONNECT.mat (new coral connectivity at 1 km resolution).
 This file exceeds GitHub’s size limit and is therefore not included here. Please contact me (y.bozec@uq.edu.au) to obtain a copy.
+
+## Instructions
 
 The code is written in MATLAB (2023b or earlier versions).
 To execute the model:

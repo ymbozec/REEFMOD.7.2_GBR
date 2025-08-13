@@ -15,7 +15,8 @@ See MAIN_REEFMOD_GBR.m for the full list of new implementations.
 
 ## Instructions
 
-WARNING: running the code requires inclusion into the Matlab working directory of the folder REEFMOD.7.0_GBR/data.
+WARNING: running the code requires inclusion into the folder /data of the file GBR1_CONNECT.mat (new coral connectivity at 1 km resolution).
+This file exceeds GitHub’s size limit and is therefore not included here. Please contact me (y.bozec@uq.edu.au) to obtain a copy.
 
 The code is written in MATLAB (2023b or earlier versions).
 To execute the model:
@@ -37,3 +38,7 @@ Bozec, Y.-M., K. Hock, R. A. Mason, M. E. Baird, C. Castro-Sanguino, S. A. Condi
 https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1002/ecm.1494
 
 Castro-Sanguino, C., Y.-M. Bozec, S. A. Condie, C. S. Fletcher, K. Hock, C. Roelfsema, D. A. Westcott, and P. J. Mumby. 2023. Control efforts of crown‐of‐thorns starfish outbreaks to limit future coral decline across the Great Barrier Reef. Ecosphere 14:e4580. https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecs2.4580
+
+
+## Contact
+Yves-Marie Bozec, The University of Queensland (y.bozec@uq.edu.au)

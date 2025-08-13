@@ -11,24 +11,39 @@ META.nb_time_steps = nb_time_steps;
 %% Reef areas
 load('GBR_REEF_POLYGONS_2024.mat') % with updated estimates of ungrazable substratum from benthic maps 10/2023
 % New reef areas based on the 3D surface areas of geomorphic classes down to 20m depth (Roelfsema et al. 2021 Rem. Sens.).
-% Available for all geomorphic classes (Geom_total) and coral geomorphic classes (Geom_CH). 
+% Available for all geomorphic classes (Geom_total) and coral geomorphic classes (Geom_CH).
 % Also contains reef specific estimates of UNGRAZABLE (from benthic maps, Roelfsema et al. 2021),
 % and corrected assignment of shelf position (Caro) and zoning status (Tina)
 
 %% Reef selection
 META.reef_ID = [1:3806]'; % Entire GBR
-% META.reef_ID = GBR_REEFS.Reef_ID(GBR_REEFS.LAT<-15.4 & GBR_REEFS.LAT >-15.7); % Region around Moore reef
+% META.reef_ID = GBR_REEFS.Reef_ID(GBR_REEFS.LAT<-16.78 & GBR_REEFS.LAT >-17.12 & GBR_REEFS.LON >146.05); % Region around Moore Reef (24 reefs)
 % META.reef_ID = GBR_REEFS.Reef_ID(GBR_REEFS.LAT<-15.76 & GBR_REEFS.LAT >-17.34); % Cairns region reduced (190 reefs) for restoration
+% META.reef_ID=3528; % Heron Reef
+% META.reef_ID=3526; % Reef with less than 1% plate coral to start
+% META.reef_ID=1939; % reef with lowest initial cover of 4%
 
 META.nb_reefs = length(META.reef_ID);
-META.outside_reef_ID = GBR_REEFS.Reef_ID(ismember(GBR_REEFS.Reef_ID,META.reef_ID)==0); % empty when all 3,806 reefs are included
 META.reef_lat = GBR_REEFS.LAT(META.reef_ID); % required for CoTS control
 META.reef_lon = GBR_REEFS.LON(META.reef_ID); % required for CoTS control
 
-% Define which habitat area to use 
-META.area_habitat = GBR_REEFS.Geom_CH_km2(META.reef_ID); % 3D area of coral habitat (CH) geomorphic classes 
+% Define boundary reefs for larval supply from outside the selected region
+META.outside_reef_ID = GBR_REEFS.Reef_ID(ismember(GBR_REEFS.Reef_ID,META.reef_ID)==0); % empty when all 3,806 reefs are included
+% META.outside_reef_ID = []; % forced to be empty if regional external larval supply is ignored
+
+% Forced larval input for a 400m2 area (will add to what's calculated from retention + connectivity)
+% Will be set for every reef further down (line 
+META.coral_immigration = [0 ; 0 ; 0 ; 0 ; 0 ; 0] ; % per species
+% META.coral_immigration = [0 ; 1e7 ; 0 ; 0 ; 0 ; 0] ; % per species
+
+if META.nb_reefs > 1
+    META.coral_immigration = repmat(META.coral_immigration,1,META.nb_reefs)' ; % repeat for every reef
+end
+
+% Define which habitat area to use
+META.area_habitat = GBR_REEFS.Geom_CH_km2(META.reef_ID); % 3D area of coral habitat (CH) geomorphic classes
 % META.area_habitat = GBR_REEFS.Geom_total_km2(META.reef_ID); % 3D area of all geomorphic classes
-% META.area_habitat = GBR_REEFS.Reference_Area_km2(META.reef_ID); % 2D area based on GBRMPA reference reef outline 
+% META.area_habitat = GBR_REEFS.Reference_Area_km2(META.reef_ID); % 2D area based on GBRMPA reference reef outline
 
 %% Set up bleaching
 META.doing_bleaching = OPTIONS.doing_bleaching ;
@@ -43,13 +58,26 @@ CORAL.bleaching_depth = (0.420 + 0.272*DEPTH)^-1;
 CORAL.MAX_HT = 8 * [1 ; 1 ; 1 ; 1 ; 1 ; 1 ]; % limits of heat tolerance that can be achieved in simulations (+/- 8 degC-week)
 CORAL.heritability_HT = OPTIONS.heritability_HT * [1 ; 1 ; 1 ; 1 ; 1 ; 1 ]; % as proportion of phenotypic variance due to additive genetic variance
 
+%% Set up Allee effect
+META.doing_allee_effect = OPTIONS.allee_effect ;
+CORAL.min_fertilization_success = 0.02*ones(1,6);
+% PJM (27/10/2024): parameters for the effect of density per 100 m2 on FS. It's a log-log relationship.
+% Empirically-derived for plating acroporids (species 2) 
+CORAL.int_est=2.72;
+CORAL.int_se=0.08878;
+CORAL.coef_est=0.1426;
+CORAL.coef_se=0.0006058;
+% Adjust FS to other species relative to that of plating acroporids using multipliers.
+% Species 2 is always 1 (the reference).
+CORAL.relative_allee_effect_per_species = [1 1 1 1 1 1]; % to be revisited later
+
 %% Set up cyclones
 META.doing_hurricanes = OPTIONS.doing_cyclones ;
 
 % 03/2024 - randomise the incidence of a predicted cylone (based on orbital velocity thresholds):
-META.randomize_hurricane_strike = 0; 
+META.randomize_hurricane_strike = 0;
 % if no (=0), REEF.hurricane_strike_incidence = 1 (= strike probability for a reef)
-% if yes (=1), REEF.hurricane_strike_incidence gets reef specific proba (STRIKE_INCIDENCE in settings_GBR) 
+% if yes (=1), REEF.hurricane_strike_incidence gets reef specific proba (STRIKE_INCIDENCE in settings_GBR)
 
 %% Set up CoTS
 % NOTE: don't refine COTS parameters here because they will be erased by settings_COTS
@@ -68,7 +96,6 @@ META.doing_size_frequency = OPTIONS.doing_size_frequency; % Track coral colonies
 
 %% Connectivity
 META.doing_coral_connectivity = 1 ;
-% META.coral_immigration = 1e6*ones(1,META.nb_time_steps) ; % Forced larval input for a 400m2 area - works only if connectivity is OFF
 
 META.recruitment_type = 1; % turn into 0 for fixed recruitment (but then connect and genetics won't work)
 % See ReefMod.6.8 for an example of forced larval input for Moore Reef cluster
@@ -98,24 +125,24 @@ META.doing_restoration = OPTIONS.doing_restoration;
 META.doing_genetics = OPTIONS.doing_genetics ;
 
 if META.doing_genetics==1
-    
+
     settings_GENETICS;
-    
+
     META.genetics.SIGMA_COLD = OPTIONS.genetic_parms(1) + [ 0 0 0 0 0 0 ]; % for the cold side (when temp<Topt)
     META.genetics.SIGMA_HOT = OPTIONS.genetic_parms(2) + [ 0 0 0 0 0 0 ]; % for the hot side (when temp>Topt)
     META.genetics.esd = OPTIONS.genetic_parms(3) + [ 0 0 0 0 0 0 ]; % SD of environmental effect on fitness (mean=0), on top of genetics.
     META.genetics.enhanced_tolerance = OPTIONS.thermal_tolerance_outplants ;
-    
+
     % Load the pre-adapted pool of QTL
     load(['QTL_pool_sigma_c' num2str(OPTIONS.genetic_parms(1)) '_h' num2str(OPTIONS.genetic_parms(2))...
         '_esd' num2str(OPTIONS.genetic_parms(3)) '.mat']);
-    
+
     CORAL.growth_rate = CORAL.growth_rate/mean_fitness; % average fitness across the GBR after burn-in
     % this allows adjusting fitness so that mean individual growth rate is close to ReefMod's default.
-    % Note this average fitness is relative to the local environment corals are adapted to, ie we are not 
-    % modelling latitudinal differences in growth rates (100% fitness in the far South gives the same growth rate than 
+    % Note this average fitness is relative to the local environment corals are adapted to, ie we are not
+    % modelling latitudinal differences in growth rates (100% fitness in the far South gives the same growth rate than
     % in the far North, while in reality coral growth declines at with latitude
-    
+
 end
 
 %% INITIALISATION
@@ -123,79 +150,79 @@ rng(simul); % to get a repeatable scheme of random number generation in RAND, RA
 
 INITIALISATION
 
-settings_GBR
+settings_GBR_NEW
 
 if META.doing_restoration == 1
-    
+
     settings_RESTORATION;
-    
+
     % Then generate priority lists for each technique = list of reef ID sorted from highest to lowest priority
     % Note the list is set only once and remains the same throughout the simulation
     MY_REEFS = GBR_REEFS(META.reef_ID,:);
-%     META.priority_list_Outplant = f_generate_priority_list_NEW(META.priority_option_Outplant, MY_REEFS, CONNECT);
-%     META.priority_list_RubbleStab = f_generate_priority_list_NEW(META.priority_option_RubbleStab, META.reef_ID, MY_REEFS, CONNECT);
-%     META.priority_list_LarvalEnrich  = f_generate_priority_list_NEW(META.priority_option_LarvalEnrich, MY_REEFS, CONNECT);
-%     META.priority_list_Fogging = f_generate_priority_list_NEW(META.priority_option_Fogging, MY_REEFS, CONNECT);
+    %     META.priority_list_Outplant = f_generate_priority_list_NEW(META.priority_option_Outplant, MY_REEFS, CONNECT);
+    %     META.priority_list_RubbleStab = f_generate_priority_list_NEW(META.priority_option_RubbleStab, META.reef_ID, MY_REEFS, CONNECT);
+    %     META.priority_list_LarvalEnrich  = f_generate_priority_list_NEW(META.priority_option_LarvalEnrich, MY_REEFS, CONNECT);
+    %     META.priority_list_Fogging = f_generate_priority_list_NEW(META.priority_option_Fogging, MY_REEFS, CONNECT);
 
     % ONLY FOR THE BCA: focus on the two reef clusters and deploy fixed density of outplants
     % Deployment areas are set in settings_RESTORATION
     META.priority_list_Outplant = find(META.coral_deployment.DeploymentArea_km2>0);
     META.priority_list_LarvalEnrich = find(META.coral_deployment.DeploymentArea_km2>0);
     META.priority_list_RubbleStab = 1:length(META.reef_ID); % do it everywhere for the moment
-    
+
     reef_fogging_list = ismember(META.coral_deployment.Reef_ID,META.fogged_reef_ID);
     META.priority_list_Fogging = find(reef_fogging_list == 1);
-    
+
 else % This is needed in MULTIPLE_REEF_SETUP
-    
+
     META.doing_cooling=0;
-    META.cooling_factor = 0; 
-    
+    META.cooling_factor = 0;
+
 end
 
 % Adjustments in case of coral outplanting
 if META.nb_coral_types > 6
-    
+
     % Add initial cover for outplants (0%)
     init_coral_cover = [init_coral_cover zeros(META.nb_reefs, META.nb_coral_types-6)];
-    
+
     if META.doing_COTS == 1
         % Extend the vector of CoTS preferences
         X = META.COTS_feeding_prefs;
         X = [X ; X];
         META.COTS_feeding_prefs = X/sum(X); % feeding prefs sum to 1
-%         META.COTS_pref_corals = [META.COTS_pref_corals META.COTS_pref_corals(META.outplanted_species)+5]; % don't need to change this
+        %         META.COTS_pref_corals = [META.COTS_pref_corals META.COTS_pref_corals(META.outplanted_species)+5]; % don't need to change this
     end
 end
 
 %% REFINE IF SPECIFIC FORCING CONDITIONS (eg, for building look-up table for the ReefMod Engine)
 % (only works with single reef simulations)
 if isempty(OPTIONS.init_coral_cover)==0
-    init_coral_cover = OPTIONS.init_coral_cover;  
+    init_coral_cover = repmat(OPTIONS.init_coral_cover, META.nb_reefs, 1);
 end
 
 if isempty(OPTIONS.init_sand_cover)==0
-    init_sand_cover = OPTIONS.init_sand_cover;  
+    init_sand_cover = repmat(OPTIONS.init_sand_cover, META.nb_reefs, 1);
 end
 
 if isempty(OPTIONS.init_rubble_cover)==0
-    init_rubble_cover = OPTIONS.init_rubble_cover;  
-end    
-    
-if isempty(OPTIONS.ssc)==0 
+    init_rubble_cover = repmat(OPTIONS.init_rubble_cover, META.nb_reefs, 1);
+end
+
+if isempty(OPTIONS.ssc)==0
     CORAL_recruit_survival = (1 - 1.88*0.001*OPTIONS.ssc)^(180/40);
     CORAL_juvenile_growth = 1 - 0.176*log(OPTIONS.ssc+1);
-    
+
     FERT = exp(4.579 - 0.010*OPTIONS.ssc)/exp(4.579); % fertilization success
     SETT = (99.571 - 10.637*log(OPTIONS.ssc+1))/99.571; % settlement success
     CORAL_larvae_production =  FERT*SETT;
-    
+
     % Store in REEF_POP (same value for all years)
     for y=1:size(REEF_POP,2)
-        
+
         REEF_POP(y).CORAL_recruit_survival = CORAL_recruit_survival;
         REEF_POP(y).CORAL_juvenile_growth = CORAL_juvenile_growth;
-        REEF_POP(y).CORAL_larvae_production = CORAL_larvae_production;    
+        REEF_POP(y).CORAL_larvae_production = CORAL_larvae_production;
     end
 end
 
@@ -205,7 +232,7 @@ MULTIPLE_REEF_SETUP
 if META.doing_COTS == 1
     for n=1:length(META.reef_COTS_INIT_BOX)
         id_reef = find(META.reef_ID==META.reef_COTS_INIT_BOX(n));
-        
+
         if isempty(id_reef) == 0
             REEF(id_reef).COTS_background_density = META.COTS_background_density_INIT_BOX;
         end
@@ -223,11 +250,11 @@ if META.doing_Chl_forcing == 1 && META.doing_COTS == 1
     end
 end
 
-%% If doing COTS control 
+%% If doing COTS control
 if META.doing_COTS_control == 1
     settings_COTS_CONTROL % %Tina: load in new parameter file with all control info
 end
-             
-clearvars -except META REEF CORAL ALGAL CONNECT REEF_POP REEF_COTS
 
-[RESULT, RECORD] = f_runmodel(META, REEF, CORAL, ALGAL, CONNECT, REEF_POP, REEF_COTS) ;
+clearvars -except META REEF CORAL ALGAL CONNECT_GBR1 CONNECT_GBR4 REEF_POP REEF_COTS
+
+[RESULT, RECORD] = f_runmodel(META, REEF, CORAL, ALGAL, CONNECT_GBR4, CONNECT_GBR1, REEF_POP, REEF_COTS) ; % Feb 2025: need to feed with two connectivity sets

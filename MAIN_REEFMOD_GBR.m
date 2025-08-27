@@ -278,10 +278,7 @@ for simul = 1:NB_SIMULATIONS
 
     record_applied_cyclones(simul,:,:) = squeeze(OUTPUTS(simul).RECORD.hurricane_events);
     record_applied_DHWs(simul,:,:) = squeeze(OUTPUTS(simul).RECORD.applied_DHWs);
-
-    if exist('RECORD.applied_bleaching_mortality')==1
-        record_applied_bleaching_mortality(simul,:,:) = squeeze(OUTPUTS(simul).RECORD.applied_bleaching_mortality);
-    end
+    record_applied_bleaching_mortality(simul,:,:) = squeeze(OUTPUTS(simul).RECORD.applied_bleaching_mortality);
 
     record_spawning_chronology_GBR4(simul,:) =  squeeze(OUTPUTS(simul).RECORD.spawning_chronology_GBR4);
     record_spawning_chronology_GBR1(simul,:) =  squeeze(OUTPUTS(simul).RECORD.spawning_chronology_GBR1);
@@ -319,7 +316,7 @@ for simul = 1:NB_SIMULATIONS
         COTS_larval_output(simul,:,:) = squeeze(OUTPUTS(simul).RESULT.COTS_larval_output); % Density for 400m2
     end
 
-    if OPTIONS.doing_COTS_control == 1
+    if OPTIONS.doing_COTS_control == 1 && META.nb_time_steps >= META.COTS_control_start
         COTS_CONTROL_culled_reefs(simul,:,:) = squeeze(OUTPUTS(simul).RESULT.COTS_culled_reefs);
         COTS_CONTROL_remaining_dives(simul,:) = squeeze(OUTPUTS(simul).RESULT.COTS_control_remaining_dives);
         COTS_CONTROL_culled_density(simul,:,:) = squeeze(OUTPUTS(simul).RESULT.COTS_culled_density);

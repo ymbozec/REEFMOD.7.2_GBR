@@ -380,7 +380,7 @@ for n = 1:META.nb_reefs % This must be done for every reef before time simulatio
                 DENSITY = length(I)/(META.grid_x_count*META.grid_y_count) ; % this is mean density per cell
                 DENSITY = DENSITY.*100; % density per 100 m2 which is used in empirical calibration
 
-                if DENSITY <= 0.3 % critically low density that can't be accommodated in the calibration
+                if DENSITY <= 0.2 % critically low density that can't be accommodated in the calibration
 
                     FS = CORAL.min_fertilization_success(s); % lowest FS permitted for that group
 
@@ -1168,7 +1168,7 @@ t
                         DENSITY = length(I)/(META.grid_x_count*META.grid_y_count) ; % this is mean density per cell
                         DENSITY = DENSITY.*100; % density per 100 m2 which is used in empirical calibration
 
-                        if DENSITY <= 0.3 % critically low density that can't be accommodated in the calibration
+                        if DENSITY <= 0.2 % critically low density that can't be accommodated in the calibration
 
                             FS = CORAL.min_fertilization_success(s); % lowest FS permitted for that group
 

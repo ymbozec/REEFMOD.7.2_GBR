@@ -178,6 +178,9 @@ init_sand_cover(init_sand_cover<0.05) = 0.05; % impose minimum of 5%
 CHECK = sum(init_coral_cover,2) + init_sand_cover;
 init_sand_cover(CHECK>0.95) = 0.95 - sum(init_coral_cover(CHECK>0.95,:),2);
 
+%% Populate initial algal cover
+init_algal_cover = 0.001*ones(META.nb_reefs,META.nb_coral_types);
+
 clear init_coral init_sand init_rubble relative_cover X Y varSD adjust_TCmax select_TCmax TCmax varSDother CHECK
 
 %% COTS densities - INPUT DENSITIES MUST BE PER GRID (400m2), NOT PER TOW

@@ -10,7 +10,7 @@
 for n = 1:length(META.reef_ID)
         
     REEF(n).initial_coral_cover = init_coral_cover(n,:);
-    REEF(n).initial_algal_cover = [ 0 ; 0.01 ; 0.01 ; 0 ] ;
+    REEF(n).initial_algal_cover = init_algal_cover(n,:) ;
     REEF(n).nongrazable_substratum = init_sand_cover(n,1) ;
     REEF(n).initial_rubble_pct = 100*init_rubble_cover(n,1) ;
     

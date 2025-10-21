@@ -12,6 +12,12 @@ Version 7.2 also integrates the last implementation (June 2024, Christina Skinne
 
 See MAIN_REEFMOD_GBR.m for the full list of new implementations.
 
+## Note on Allee effects (Oct 2025)
+The current version integrates the refinement of coral fertilisation success (FS) when the option of Allee effects is turned OFF. 
+
+Previously FS = 1 and now FS = 0.4. This change enables a fair comparison of coral dynamics with vs. without Allee effects (as the maximum fertilisation success *with* Allee effects is around 0.3-0.4). As a consequence, the shape parameter of the larval-stock recruitment relationship had to be re-calibrated (coral recovery dynamics consistent with LTMP observations + simulated number of coral juveniles consistent with GBR observations, as in Bozec et al. 2022).
+
+These modifications were performed *after* running the RRAP Counterfactual FY2025 study (Feb 2025). The FY2025 Counterfactuals were obtained with the option Allee effects turned OFF (MAIN_REEFMOD_GBR), the previous parametrisation of the shape parameter of the larval-stock recruitment (CORAL.BH_beta = 5x1e6xones(6,1) in f_multiple_reef) and fertilisation success (FS) set to 1 (f_runmodel). Running the Counterfactuals with the new parameterisation (and the option Allee effects still OFF) should give very similar (if not the exact same) results.
 
 ## Extra requirements
 

@@ -102,7 +102,8 @@ META.recruitment_type = 1; % turn into 0 for fixed recruitment (but then connect
 
 % Parameter a of the B-H function (same for all reefs), calibrated with
 CORAL.BH_alpha = 15*CORAL.prop_settlers; % per m2
-CORAL.BH_beta = 5*1e6*ones(6,1); % for a 400m2 reef
+% CORAL.BH_beta = 5*1e6*ones(6,1); % for a 400m2 reef
+CORAL.BH_beta = 0.4*5*1e6*ones(6,1); % Oct 2025: re-calibration with new default value for fertilization success (FS = 0.4)
 
 % Force self-seeding of coral larvae
 META.coral_min_selfseed = 0.28 ; % relative proportion of produced larvae that stay on the reef (Bozec et al. 2022)
@@ -258,3 +259,4 @@ end
 clearvars -except META REEF CORAL ALGAL CONNECT_GBR1 CONNECT_GBR4 REEF_POP REEF_COTS
 
 [RESULT, RECORD] = f_runmodel(META, REEF, CORAL, ALGAL, CONNECT_GBR4, CONNECT_GBR1, REEF_POP, REEF_COTS) ; % Feb 2025: need to feed with two connectivity sets
+

@@ -14,7 +14,8 @@
 % (effectively no triggering threshold and CoTS density set to 0 after culling with no commensurate culling effort).
 %
 % Also includes:
-% - the first implementation of Allee effect on corla fertilisation (in progress).
+% - the implementation of Allee effect on coral fertilisation (with new calibration of CORAL.BH_beta consistent with
+% change in max fertilisation success FS).
 % - the new connectivity matrices for coral larvae (1 km resolution) from CSIRO.
 % - hindcast exposure to heat stress extended to 2024 (inclusive)
 % - revised hindcast exposure to cyclones (using wind-field model) with extension to 2024 (inclusive)
@@ -42,7 +43,7 @@ NB_SIMULATIONS = 20; % Number of repeated runs
 % NB_TIME_STEPS = 34; % HINDCAST: summer 2008 to winter 2024 (34 steps)
 NB_TIME_STEPS = 34+152; % HINDCAST+FORECAST summer 2008 - winter 2100
 
-OutputName = 'R0_GBR.7.2'; options = [1 1 1 1 0 1 0.3 1]; % see list of options below
+OutputName = 'R0_GBR.7.2'; options = [1 1 1 1 0 1 0.3 0]; % see list of options below
 
 %% select the Global Circulation Model for climate change projection (CMIP-6)
 GCM = 1;

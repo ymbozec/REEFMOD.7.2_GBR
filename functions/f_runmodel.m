@@ -372,7 +372,7 @@ for n = 1:META.nb_reefs % This must be done for every reef before time simulatio
             % Oct 2024: adding fertilisation success to simulate allee effect
             if META.doing_allee_effect == 0
 
-                FS = 1; % fertilization success
+                FS = 0.4; % fertilization success (changed July 2025 + recalibration of CORAL.BH_beta)
 
             else
 
@@ -1160,7 +1160,7 @@ t
                     % Oct 2024: adding fertilisation success to simulate allee effect
                     if META.doing_allee_effect == 0
 
-                        FS = 1; % fertilization success
+                        FS = 0.4; % fertilization success (changed July 2025 + recalibration of CORAL.BH_beta)
 
                     else
 
@@ -1398,3 +1398,4 @@ end % end of the time steps loop for a single simulation
 if META.track_populations == 1
     f_generate_track_files(META, REEF, CORAL, ALGAL, RECORD, colony_list, environ_list)
 end
+
